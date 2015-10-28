@@ -28,7 +28,15 @@ public class Pathmaker : MonoBehaviour {
 			float randomNum = Random.Range(0.0f, 1.0f);
 			//float randomNum = Random.value;
 
-			Debug.Log (randomNum);
+			//Debug.Log (randomNum);
+			// Vector3.up == new Vector3(0f, 1f, 0f) //(vector as direction) 
+			// transform.position - Vector3.up == new Vector3(transform.position.x, transform.position.y-1f, transform.position.z)
+			// create raycast 
+			bool isBlocked = Physics.Raycast(transform.position - 10*Vector3.up, Vector3.up);
+
+
+
+
 			if (randomNum < 0.25f) {
 				// rotate 90 degrees
 				transform.Rotate (0f, 90f, 0f);
@@ -65,7 +73,7 @@ public class Pathmaker : MonoBehaviour {
 
 				randomNum *= 100; // make into a whole number
 				randomNum = Mathf.Floor (randomNum);
-				Debug.Log ("RANDOM NUM: " + randomNum);
+//				Debug.Log ("RANDOM NUM: " + randomNum);
 				if (randomNum % 4 == 0) {
 					// steak
 					floorPrefab = steak;
@@ -86,11 +94,16 @@ public class Pathmaker : MonoBehaviour {
 
 			} else if (randomNum > 0.99f && randomNum < 1.0f) {
 				// instantiate a pathmakingPrefab clone at current position
-				Instantiate(pathmakerPrefab, transform.position, transform.rotation);
+
+				if (!isBlocked) { 
+					Instantiate(pathmakerPrefab, transform.position, transform.rotation);
+				}
 			}
 
 			// instantiate a floor prefab clone at current position;
-			Instantiate (floorPrefab, transform.position, transform.rotation);
+			if (!isBlocked) {
+				Instantiate (floorPrefab, transform.position, transform.rotation);
+			}
 
 			// move foward (in local space) by 5 units; 
 			transform.Translate (0f, 0f, 5f);
